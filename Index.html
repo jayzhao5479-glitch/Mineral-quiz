@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>礦物學實習 上半學期 複習測驗系統</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --error: #dc2626;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 24px; }
+    header h1 { font-size: 1.8rem; color: #0f172a; margin-bottom: 8px; }
+    header p { color: #64748b; font-size: 0.95rem; }
+    
+    .mode-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 24px; }
+    .btn { background-color: var(--card-bg); border: 1px solid var(--border); padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.2s; }
+    .btn:hover { background-color: #f1f5f9; }
+    .btn.active { background-color: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-action { background-color: var(--primary); color: white; border: none; }
+    .btn-action:hover { background-color: var(--primary-hover); }
+
+    .control-panel { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .quiz-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .card-title { font-size: 1.15rem; font-weight: 600; color: #0f172a; }
+    .badge { font-size: 0.75rem; background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 9999px; }
+
+    .quiz-item { display: grid; grid-template-columns: 140px 1fr 1fr; gap: 12px; align-items: center; margin-bottom: 12px; padding: 10px; border-radius: 8px; background: #f8fafc; }
+    @media (max-width: 650px) {
+      .quiz-item { grid-template-columns: 1fr; }
+    }
+    .mineral-name { font-weight: 600; font-size: 1rem; color: #334155; }
+    .input-wrap { display: flex; align-items: center; gap: 6px; }
+    .input-wrap input { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; }
+    .input-wrap input.correct { border-color: var(--success); background-color: #f0fdf4; color: var(--success); }
+    .input-wrap input.wrong { border-color: var(--error); background-color: #fef2f2; color: var(--error); }
+    .speaker-btn { background: none; border: none; cursor: pointer; font-size: 1.25rem; padding: 2px 6px; border-radius: 4px; }
+    .speaker-btn:hover { background-color: #e2e8f0; }
+
+    .ans-hint { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+    .footer-actions { text-align: center; margin-top: 20px; display: flex; gap: 12px; justify-content: center; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>礦物學中英文與化學式 複習系統</h1>
+    <p>範圍：第 1～5 次小考（編號 1～70）</p>
+  </header>
+
+  <!-- 模式切換 -->
+  <div class="mode-nav">
+    <button class="btn active" onclick="switchMode(1)">1. 相似礦物群組測驗</button>
+    <button class="btn" onclick="switchMode(2)">2. 指定週次進度 (Week 1-5)</button>
+    <button class="btn" onclick="switchMode(3)">3. 全範圍隨機 20 題總複習</button>
+  </div>
+
+  <!-- 次級控制台 -->
+  <div class="control-panel" id="sub-panel">
+    <!-- 動態生成控制項 -->
+  </div>
+
+  <!-- 測驗區域 -->
+  <div id="quiz-area"></div>
+
+  <!-- 送出與功能按鈕 -->
+  <div class="footer-actions">
+    <button class="btn btn-action" onclick="checkAnswers()">送出批改</button>
+    <button class="btn" onclick="showAnswers()">顯示答案</button>
+    <button class="btn" onclick="resetCurrentQuiz()">重新作答</button>
+  </div>
+</div>
+
+<script>
+// 1-5 頁礦物資料庫
+const minerals = [
+  // Week 1
+  { id: 1, week: 1, zh: "自然金", en: "Gold", formula: "Au", group: "自然元素金屬類" },
+  { id: 2, week: 1, zh: "自然銀", en: "Silver", formula: "Ag", group: "自然元素金屬類" },
+  { id: 3, week: 1, zh: "自然銅", en: "Copper", formula: "Cu", group: "自然元素金屬類" },
+  { id: 4, week: 1, zh: "自然砷", en: "Arsenic", formula: "As", group: "自然元素金屬類" },
+  { id: 5, week: 1, zh: "自然硫/硫磺", en: "Sulfur", formula: "S", group: "碳質與非金屬類" },
+  { id: 6, week: 1, zh: "石墨", en: "Graphite", formula: "C", group: "碳質與非金屬類" },
+  { id: 7, week: 1, zh: "鑽石", en: "Diamond", formula: "C", group: "碳質與非金屬類" },
+  { id: 8, week: 1, zh: "輝銅礦", en: "Chalcocite", formula: "Cu2S", group: "銅鐵硫化物" },
+  { id: 9, week: 1, zh: "斑銅礦", en: "Bornite", formula: "Cu5FeS4", group: "銅鐵硫化物" },
+  { id: 10, week: 1, zh: "方鉛礦", en: "Galena", formula: "PbS", group: "簡易二元硫化物" },
+  { id: 11, week: 1, zh: "閃鋅礦", en: "Sphalerite", formula: "ZnS", group: "簡易二元硫化物" },
+  { id: 12, week: 1, zh: "磁黃鐵礦", en: "Pyrrhotite", formula: "Fe1-xS", group: "簡易二元硫化物" },
+  { id: 13, week: 1, zh: "紅砷鎳礦", en: "Nickeline", formula: "NiAs", group: "砷化物與磺鹽類" },
+  { id: 14, week: 1, zh: "銅藍", en: "Covellite", formula: "CuS", group: "銅鐵硫化物" },
+
+  // Week 2
+  { id: 15, week: 2, zh: "辰砂", en: "Cinnabar", formula: "HgS", group: "簡易二元硫化物" },
+  { id: 16, week: 2, zh: "雄黃", en: "Realgar", formula: "AsS", group: "砷化物與磺鹽類" },
+  { id: 17, week: 2, zh: "雌黃", en: "Orpiment", formula: "As2S3", group: "砷化物與磺鹽類" },
+  { id: 18, week: 2, zh: "輝銻礦", en: "Stibnite", formula: "Sb2S3", group: "砷化物與磺鹽類" },
+  { id: 19, week: 2, zh: "黃鐵礦", en: "Pyrite", formula: "FeS2", group: "簡易二元硫化物" },
+  { id: 20, week: 2, zh: "鎳黃鐵礦", en: "Pentlandite", formula: "(Fe,Ni)9S8", group: "砷化物與磺鹽類" },
+  { id: 21, week: 2, zh: "黃銅礦", en: "Chalcopyrite", formula: "CuFeS2", group: "銅鐵硫化物" },
+  { id: 22, week: 2, zh: "毒砂/砷黃鐵礦", en: "Arsenopyrite", formula: "FeAsS", group: "砷化物與磺鹽類" },
+  { id: 23, week: 2, zh: "輝鉬礦", en: "Molybdenite", formula: "MoS2", group: "砷化物與磺鹽類" },
+  { id: 24, week: 2, zh: "方砷鈷礦", en: "Skutterudite", formula: "CoAs3", group: "砷化物與磺鹽類" },
+  { id: 25, week: 2, zh: "砷黝銅礦", en: "Tennantite", formula: "Cu12As4S13", group: "砷化物與磺鹽類" },
+  { id: 26, week: 2, zh: "赤銅礦", en: "Cuprite", formula: "Cu2O", group: "簡易氧化物" },
+  { id: 27, week: 2, zh: "紅鋅礦", en: "Zincite", formula: "ZnO", group: "簡易氧化物" },
+  { id: 28, week: 2, zh: "赤鐵礦", en: "Hematite", formula: "Fe2O3", group: "剛玉與赤鐵礦族" },
+
+  // Week 3
+  { id: 29, week: 3, zh: "剛玉", en: "Corundum", formula: "Al2O3", group: "剛玉與赤鐵礦族" },
+  { id: 30, week: 3, zh: "鈦鐵礦", en: "Ilmenite", formula: "FeTiO3", group: "剛玉與赤鐵礦族" },
+  { id: 31, week: 3, zh: "金紅石", en: "Rutile", formula: "TiO2", group: "簡易氧化物" },
+  { id: 32, week: 3, zh: "軟錳礦", en: "Pyrolusite", formula: "MnO2", group: "簡易氧化物" },
+  { id: 33, week: 3, zh: "錫石", en: "Cassiterite", formula: "SnO2", group: "簡易氧化物" },
+  { id: 34, week: 3, zh: "鉻鐵礦", en: "Chromite", formula: "FeCr2O4", group: "尖晶石族" },
+  { id: 35, week: 3, zh: "針鐵礦", en: "Goethite", formula: "FeO(OH)", group: "氫氧化物族" },
+  { id: 36, week: 3, zh: "水鋁石", en: "Diaspore", formula: "AlO(OH)", group: "氫氧化物族" },
+  { id: 37, week: 3, zh: "水錳礦", en: "Manganite", formula: "MnO(OH)", group: "氫氧化物族" },
+  { id: 38, week: 3, zh: "水鎂石", en: "Brucite", formula: "Mg(OH)2", group: "氫氧化物族" },
+  { id: 39, week: 3, zh: "三水鋁石", en: "Gibbsite", formula: "Al(OH)3", group: "氫氧化物族" },
+  { id: 40, week: 3, zh: "尖晶石", en: "Spinel", formula: "MgAl2O4", group: "尖晶石族" },
+  { id: 41, week: 3, zh: "磁鐵礦", en: "Magnetite", formula: "Fe3O4", group: "尖晶石族" },
+  { id: 42, week: 3, zh: "鋇硬錳礦", en: "Romanechite", formula: "(Ba,H2O)2(Mn4+,Mn3+)5O16", group: "氫氧化物族" },
+  { id: 43, week: 3, zh: "鋅鐵尖晶石", en: "Franklinite", formula: "ZnFe2O4", group: "尖晶石族" },
+
+  // Week 4
+  { id: 44, week: 4, zh: "岩鹽", en: "Halite", formula: "NaCl", group: "鹵化物" },
+  { id: 45, week: 4, zh: "螢石", en: "Fluorite", formula: "CaF2", group: "鹵化物" },
+  { id: 46, week: 4, zh: "方解石", en: "Calcite", formula: "CaCO3", group: "方解石族與碳酸鹽" },
+  { id: 47, week: 4, zh: "菱鎂礦", en: "Magnesite", formula: "MgCO3", group: "方解石族與碳酸鹽" },
+  { id: 48, week: 4, zh: "菱鐵礦", en: "Siderite", formula: "FeCO3", group: "方解石族與碳酸鹽" },
+  { id: 49, week: 4, zh: "菱鋅礦", en: "Smithsonite", formula: "ZnCO3", group: "方解石族與碳酸鹽" },
+  { id: 50, week: 4, zh: "菱錳礦", en: "Rhodochrosite", formula: "MnCO3", group: "方解石族與碳酸鹽" },
+  { id: 51, week: 4, zh: "霰石", en: "Aragonite", formula: "CaCO3", group: "方解石族與碳酸鹽" },
+  { id: 52, week: 4, zh: "白鉛礦", en: "Cerussite", formula: "PbCO3", group: "方解石族與碳酸鹽" },
+  { id: 53, week: 4, zh: "白雲石", en: "Dolomite", formula: "CaMg(CO3)2", group: "方解石族與碳酸鹽" },
+  { id: 54, week: 4, zh: "藍銅礦", en: "Azurite", formula: "Cu3(CO3)2(OH)2", group: "含水碳酸鹽與硼酸鹽" },
+  { id: 55, week: 4, zh: "孔雀石", en: "Malachite", formula: "Cu2(CO3)(OH)2", group: "含水碳酸鹽與硼酸鹽" },
+  { id: 56, week: 4, zh: "鈉硼解石", en: "Ulexite", formula: "NaCaB5O6(OH)6·5H2O", group: "含水碳酸鹽與硼酸鹽" },
+
+  // Week 5
+  { id: 57, week: 5, zh: "重晶石", en: "Barite", formula: "BaSO4", group: "硫酸鹽族" },
+  { id: 58, week: 5, zh: "天青石", en: "Celestite", formula: "SrSO4", group: "硫酸鹽族" },
+  { id: 59, week: 5, zh: "硬石膏", en: "Anhydrite", formula: "CaSO4", group: "硫酸鹽族" },
+  { id: 60, week: 5, zh: "石膏", en: "Gypsum", formula: "CaSO4·2H2O", group: "硫酸鹽族" },
+  { id: 61, week: 5, zh: "青鉛礦", en: "Linarite", formula: "PbCu(SO4)(OH)2", group: "硫酸鹽族" },
+  { id: 62, week: 5, zh: "明礬石", en: "Alunite", formula: "KAl3(SO4)2(OH)6", group: "硫酸鹽族" },
+  { id: 63, week: 5, zh: "黃鉀鐵礬", en: "Jarosite", formula: "KFe3(SO4)2(OH)6", group: "硫酸鹽族" },
+  { id: 64, week: 5, zh: "磷鐵鋰礦", en: "Triphylite", formula: "LiFePO4", group: "磷酸鹽與鎢酸鹽族" },
+  { id: 65, week: 5, zh: "氟磷灰石", en: "Fluorapatite", formula: "Ca5(PO4)3F", group: "磷酸鹽與鎢酸鹽族" },
+  { id: 66, week: 5, zh: "銀星石", en: "Wavellite", formula: "Al3(PO4)2(OH,F)3·5H2O", group: "磷酸鹽與鎢酸鹽族" },
+  { id: 67, week: 5, zh: "磷鋰鋁石", en: "Amblygonite", formula: "(Li,Na)AlPO4(F,OH)", group: "磷酸鹽與鎢酸鹽族" },
+  { id: 68, week: 5, zh: "釩鉛礦", en: "Vanadinite", formula: "Pb5(VO4)3Cl", group: "磷酸鹽與鎢酸鹽族" },
+  { id: 69, week: 5, zh: "白鎢礦", en: "Scheelite", formula: "CaWO4", group: "磷酸鹽與鎢酸鹽族" },
+  { id: 70, week: 5, zh: "鎢錳礦", en: "Huebnerite", formula: "MnWO4", group: "磷酸鹽與鎢酸鹽族" }
+];
+
+let currentMode = 1;
+let activeQuestions = [];
+
+// 語音播放功能
+function speak(text) {
+  if (!('speechSynthesis' in window)) {
+    alert("您的瀏覽器不支援語音播放");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.9;
+  window.speechSynthesis.speak(utterance);
+}
+
+// 切換複習模式
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-nav .btn').forEach((b, i) => {
+    b.classList.toggle('active', i + 1 === mode);
+  });
+  renderSubPanel();
+  loadQuestions();
+}
+
+// 渲染次級控制台
+function renderSubPanel() {
+  const panel = document.getElementById('sub-panel');
+  if (currentMode === 1) {
+    const groups = [...new Set(minerals.map(m => m.group))];
+    let options = groups.map(g => `<option value="${g}">${g}</option>`).join('');
+    panel.innerHTML = `
+      <div><strong>選擇相似礦物組：</strong>
+        <select id="group-select" onchange="loadQuestions()">
+          <option value="RANDOM">🎲 隨機抽一組</option>
+          ${options}
+        </select>
+      </div>
+      <button class="btn" onclick="loadQuestions()">換一組 / 重新抽取</button>
+    `;
+  } else if (currentMode === 2) {
+    panel.innerHTML = `
+      <div><strong>選擇週次進度：</strong>
+        <select id="week-select" onchange="loadQuestions()">
+          <option value="1">第 1 次小考 (Week 1)</option>
+          <option value="2">第 2 次小考 (Week 2)</option>
+          <option value="3">第 3 次小考 (Week 3)</option>
+          <option value="4">第 4 次小考 (Week 4)</option>
+          <option value="5">第 5 次小考 (Week 5)</option>
+        </select>
+      </div>
+      <button class="btn" onclick="loadQuestions()">重新整理本週題目</button>
+    `;
+  } else {
+    panel.innerHTML = `
+      <div><strong>全範圍 1~70 隨機測驗</strong>（共 20 題）</div>
+      <button class="btn" onclick="loadQuestions()">重新抽 20 題</button>
+    `;
+  }
+}
+
+// 載入題目
+function loadQuestions() {
+  if (currentMode === 1) {
+    const sel = document.getElementById('group-select').value;
+    let selectedGroup = sel;
+    if (sel === 'RANDOM') {
+      const groups = [...new Set(minerals.map(m => m.group))];
+      selectedGroup = groups[Math.floor(Math.random() * groups.length)];
+    }
+    activeQuestions = minerals.filter(m => m.group === selectedGroup);
+    renderQuiz(`相似組：${selectedGroup}（共 ${activeQuestions.length} 題）`);
+  } else if (currentMode === 2) {
+    const week = parseInt(document.getElementById('week-select').value);
+    activeQuestions = minerals.filter(m => m.week === week);
+    renderQuiz(`第 ${week} 次小考進度測驗（共 ${activeQuestions.length} 題）`);
+  } else {
+    const shuffled = [...minerals].sort(() => 0.5 - Math.random());
+    activeQuestions = shuffled.slice(0, 20);
+    renderQuiz(`總複習隨機 20 題`);
+  }
+}
+
+// 渲染測驗 HTML
+function renderQuiz(title) {
+  const container = document.getElementById('quiz-area');
+  let html = `
+    <div class="quiz-card">
+      <div class="card-header">
+        <span class="card-title">${title}</span>
+        <span class="badge">挖空測驗</span>
+      </div>
+  `;
+
+  activeQuestions.forEach((m, idx) => {
+    html += `
+      <div class="quiz-item" data-id="${m.id}">
+        <div class="mineral-name">${idx + 1}. ${m.zh}</div>
+        
+        <!-- 英文挖空與語音 -->
+        <div class="input-wrap">
+          <button class="speaker-btn" title="朗讀英文" onclick="speak('${m.en.replace(/'/g, "\\'")}')">🔊</button>
+          <div style="flex:1">
+            <input type="text" class="ans-en" placeholder="輸入英文名稱..." autocomplete="off">
+            <div class="ans-hint hint-en" style="display:none;">正解: ${m.en}</div>
+          </div>
+        </div>
+
+        <!-- 化學式挖空 -->
+        <div class="input-wrap">
+          <span style="font-size:1.1rem; opacity:0.6;">🧪</span>
+          <div style="flex:1">
+            <input type="text" class="ans-formula" placeholder="輸入化學式..." autocomplete="off">
+            <div class="ans-hint hint-formula" style="display:none;">正解: ${m.formula}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+// 化學式正規化比較（忽略空格、大小寫、括號下標微幅差異）
+function normalizeFormula(str) {
+  return str.replace(/[\s\-_]/g, '').toLowerCase();
+}
+
+// 批改答案
+function checkAnswers() {
+  const items = document.querySelectorAll('.quiz-item');
+  let score = 0;
+  let total = items.length * 2;
+
+  items.forEach(item => {
+    const id = parseInt(item.dataset.id);
+    const m = minerals.find(x => x.id === id);
+
+    const inputEn = item.querySelector('.ans-en');
+    const inputF = item.querySelector('.ans-formula');
+
+    // 驗證英文 (忽略大小寫與頭尾空白)
+    if (inputEn.value.trim().toLowerCase() === m.en.toLowerCase()) {
+      inputEn.className = 'ans-en correct';
+      score++;
+    } else {
+      inputEn.className = 'ans-en wrong';
+    }
+
+    // 驗證化學式
+    if (normalizeFormula(inputF.value) === normalizeFormula(m.formula)) {
+      inputF.className = 'ans-formula correct';
+      score++;
+    } else {
+      inputF.className = 'ans-formula wrong';
+    }
+  });
+
+  alert(`批改完成！得分: ${score} / ${total}`);
+}
+
+// 顯示提示/正確答案
+function showAnswers() {
+  document.querySelectorAll('.hint-en, .hint-formula').forEach(el => {
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  });
+}
+
+// 重設答題狀態
+function resetCurrentQuiz() {
+  document.querySelectorAll('.ans-en, .ans-formula').forEach(input => {
+    input.value = '';
+    input.className = input.classList.contains('ans-en') ? 'ans-en' : 'ans-formula';
+  });
+  document.querySelectorAll('.hint-en, .hint-formula').forEach(el => el.style.display = 'none');
+}
+
+// 初始化
+window.onload = () => {
+  renderSubPanel();
+  loadQuestions();
+};
+</script>
+</body>
+</html>
