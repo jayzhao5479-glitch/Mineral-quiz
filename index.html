@@ -37,15 +37,15 @@
     .badge { font-size: 0.75rem; background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 9999px; }
 
     /* 題目列排版 */
-    .quiz-item { display: grid; grid-template-columns: 260px 1.1fr 1fr 65px; gap: 10px; align-items: center; margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: #f8fafc; border: 1px solid transparent; }
+    .quiz-item { display: grid; grid-template-columns: 220px 1.1fr 1fr 65px; gap: 10px; align-items: center; margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: #f8fafc; border: 1px solid transparent; }
     @media (max-width: 860px) {
       .quiz-item { grid-template-columns: 1fr; gap: 8px; }
     }
     
-    .left-title-box { display: flex; align-items: center; gap: 6px; }
+    .left-title-box { display: flex; align-items: center; gap: 8px; }
     .btn-icon { background: #ffffff; border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; transition: background 0.15s; }
     .btn-icon:hover { background: #e2e8f0; }
-    .mineral-name { font-weight: 600; font-size: 0.95rem; color: #1e293b; margin-left: 2px; }
+    .mineral-name { font-weight: 600; font-size: 0.95rem; color: #1e293b; }
     
     .input-wrap { display: flex; flex-direction: column; width: 100%; position: relative; }
     .input-inner { display: flex; align-items: center; gap: 6px; }
@@ -108,7 +108,7 @@
     <div class="modal-title" id="modalMineralName"></div>
     <img src="" alt="礦物照片" class="modal-img" id="modalImg">
     <div style="font-size: 0.85rem; color:#64748b;">標本參考照片</div>
-    <a href="" target="_blank" class="modal-link" id="modalExternalLink">在 Mindat.org 查看完整晶體資料 ↗</a>
+    <a href="" target="_blank" class="modal-link" id="modalExternalLink">在 Wikipedia 查看完整條目與更多照片 ↗</a>
   </div>
 </div>
 
@@ -116,84 +116,84 @@
 // 1~5 頁礦物資料庫（共 70 題）
 const minerals = [
   // Week 1 (1-14)
-  { id: 1, week: 1, zh: "自然金", en: "Gold", formula: "Au", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Gold-24430.jpg/480px-Gold-24430.jpg" },
-  { id: 2, week: 1, zh: "自然銀", en: "Silver", formula: "Ag", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Silver-21509.jpg/480px-Silver-21509.jpg" },
-  { id: 3, week: 1, zh: "自然銅", en: "Copper", formula: "Cu", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/NatCopper.jpg/480px-NatCopper.jpg" },
-  { id: 4, week: 1, zh: "自然砷", en: "Arsenic", formula: "As", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Arsenic_1a.jpg/480px-Arsenic_1a.jpg" },
-  { id: 5, week: 1, zh: "自然硫/硫磺", en: "Sulfur", formula: "S", group: "碳質與非金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Sulfur-sample.jpg/480px-Sulfur-sample.jpg" },
-  { id: 6, week: 1, zh: "石墨", en: "Graphite", formula: "C", group: "碳質與非金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Graphite-233427.jpg/480px-Graphite-233427.jpg" },
-  { id: 7, week: 1, zh: "鑽石", en: "Diamond", formula: "C", group: "碳質與非金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Rough_diamond.jpg/480px-Rough_diamond.jpg" },
-  { id: 8, week: 1, zh: "輝銅礦", en: "Chalcocite", formula: "Cu2S", group: "銅鐵硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Chalcocite-Flambeau-26839.jpg/480px-Chalcocite-Flambeau-26839.jpg" },
-  { id: 9, week: 1, zh: "斑銅礦", en: "Bornite", formula: "Cu5FeS4", group: "銅鐵硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Bornite-139366.jpg/480px-Bornite-139366.jpg" },
-  { id: 10, week: 1, zh: "方鉛礦", en: "Galena", formula: "PbS", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Galena-24250.jpg/480px-Galena-24250.jpg" },
-  { id: 11, week: 1, zh: "閃鋅礦", en: "Sphalerite", formula: "ZnS", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Sphalerite-25760.jpg/480px-Sphalerite-25760.jpg" },
-  { id: 12, week: 1, zh: "磁黃鐵礦", en: "Pyrrhotite", formula: "Fe1-xS(0<x<0.125)", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Pyrrhotite-Quartz-160167.jpg/480px-Pyrrhotite-Quartz-160167.jpg" },
-  { id: 13, week: 1, zh: "紅砷鎳礦", en: "Nickeline", formula: "NiAs", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Nickeline-238474.jpg/480px-Nickeline-238474.jpg" },
-  { id: 14, week: 1, zh: "銅藍", en: "Covellite", formula: "CuS", group: "銅鐵硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Covellite-254583.jpg/480px-Covellite-254583.jpg" },
+  { id: 1, week: 1, zh: "自然金", en: "Gold", formula: "Au", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Gold-24430.jpg/480px-Gold-24430.jpg", wiki: "Gold" },
+  { id: 2, week: 1, zh: "自然銀", en: "Silver", formula: "Ag", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Silver-21509.jpg/480px-Silver-21509.jpg", wiki: "Silver" },
+  { id: 3, week: 1, zh: "自然銅", en: "Copper", formula: "Cu", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/NatCopper.jpg/480px-NatCopper.jpg", wiki: "Copper" },
+  { id: 4, week: 1, zh: "自然砷", en: "Arsenic", formula: "As", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Arsenic_1a.jpg/480px-Arsenic_1a.jpg", wiki: "Arsenic" },
+  { id: 5, week: 1, zh: "自然硫/硫磺", en: "Sulfur", formula: "S", group: "碳質與非金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Sulfur-sample.jpg/480px-Sulfur-sample.jpg", wiki: "Sulfur" },
+  { id: 6, week: 1, zh: "石墨", en: "Graphite", formula: "C", group: "碳質與非金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Graphite-233427.jpg/480px-Graphite-233427.jpg", wiki: "Graphite" },
+  { id: 7, week: 1, zh: "鑽石", en: "Diamond", formula: "C", group: "碳質與非金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Rough_diamond.jpg/480px-Rough_diamond.jpg", wiki: "Diamond" },
+  { id: 8, week: 1, zh: "輝銅礦", en: "Chalcocite", formula: "Cu2S", group: "銅鐵硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Chalcocite-Flambeau-26839.jpg/480px-Chalcocite-Flambeau-26839.jpg", wiki: "Chalcocite" },
+  { id: 9, week: 1, zh: "斑銅礦", en: "Bornite", formula: "Cu5FeS4", group: "銅鐵硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Bornite-139366.jpg/480px-Bornite-139366.jpg", wiki: "Bornite" },
+  { id: 10, week: 1, zh: "方鉛礦", en: "Galena", formula: "PbS", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Galena-24250.jpg/480px-Galena-24250.jpg", wiki: "Galena" },
+  { id: 11, week: 1, zh: "閃鋅礦", en: "Sphalerite", formula: "ZnS", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Sphalerite-25760.jpg/480px-Sphalerite-25760.jpg", wiki: "Sphalerite" },
+  { id: 12, week: 1, zh: "磁黃鐵礦", en: "Pyrrhotite", formula: "Fe1-xS(0<x<0.125)", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Pyrrhotite-Quartz-160167.jpg/480px-Pyrrhotite-Quartz-160167.jpg", wiki: "Pyrrhotite" },
+  { id: 13, week: 1, zh: "紅砷鎳礦", en: "Nickeline", formula: "NiAs", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Nickeline-238474.jpg/480px-Nickeline-238474.jpg", wiki: "Nickeline" },
+  { id: 14, week: 1, zh: "銅藍", en: "Covellite", formula: "CuS", group: "銅鐵硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Covellite-254583.jpg/480px-Covellite-254583.jpg", wiki: "Covellite" },
 
   // Week 2 (15-28)
-  { id: 15, week: 2, zh: "辰砂", en: "Cinnabar", formula: "HgS", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Cinnabar-Dolomite-122477.jpg/480px-Cinnabar-Dolomite-122477.jpg" },
-  { id: 16, week: 2, zh: "雄黃", en: "Realgar", formula: "AsS", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Realgar-20473.jpg/480px-Realgar-20473.jpg" },
-  { id: 17, week: 2, zh: "雌黃", en: "Orpiment", formula: "As2S3", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Orpiment-37599.jpg/480px-Orpiment-37599.jpg" },
-  { id: 18, week: 2, zh: "輝銻礦", en: "Stibnite", formula: "Sb2S3", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Stibnite-118817.jpg/480px-Stibnite-118817.jpg" },
-  { id: 19, week: 2, zh: "黃鐵礦", en: "Pyrite", formula: "FeS2", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Pyrite-25110.jpg/480px-Pyrite-25110.jpg" },
-  { id: 20, week: 2, zh: "鎳黃鐵礦", en: "Pentlandite", formula: "(Fe,Ni)9S8", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Pentlandite-232670.jpg/480px-Pentlandite-232670.jpg" },
-  { id: 21, week: 2, zh: "黃銅礦", en: "Chalcopyrite", formula: "CuFeS2", group: "銅鐵硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Chalcopyrite-Dolomite-21950.jpg/480px-Chalcopyrite-Dolomite-21950.jpg" },
-  { id: 22, week: 2, zh: "毒砂/砷黃鐵礦", en: "Arsenopyrite", formula: "FeAsS", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Arsenopyrite-117281.jpg/480px-Arsenopyrite-117281.jpg" },
-  { id: 23, week: 2, zh: "輝鉬礦", en: "Molybdenite", formula: "MoS2", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Molybdenite-21966.jpg/480px-Molybdenite-21966.jpg" },
-  { id: 24, week: 2, zh: "方砷鈷礦", en: "Skutterudite", formula: "CoAs3", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Skutterudite-118742.jpg/480px-Skutterudite-118742.jpg" },
-  { id: 25, week: 2, zh: "砷黝銅礦", en: "Tennantite", formula: "Cu12As4S13", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Tennantite-Dolomite-245781.jpg/480px-Tennantite-Dolomite-245781.jpg" },
-  { id: 26, week: 2, zh: "赤銅礦", en: "Cuprite", formula: "Cu2O", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Cuprite-24151.jpg/480px-Cuprite-24151.jpg" },
-  { id: 27, week: 2, zh: "紅鋅礦", en: "Zincite", formula: "ZnO", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Zincite-118944.jpg/480px-Zincite-118944.jpg" },
-  { id: 28, week: 2, zh: "赤鐵礦", en: "Hematite", formula: "Fe2O3", group: "剛玉與赤鐵礦族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Hematite-24254.jpg/480px-Hematite-24254.jpg" },
+  { id: 15, week: 2, zh: "辰砂", en: "Cinnabar", formula: "HgS", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Cinnabar-Dolomite-122477.jpg/480px-Cinnabar-Dolomite-122477.jpg", wiki: "Cinnabar" },
+  { id: 16, week: 2, zh: "雄黃", en: "Realgar", formula: "AsS", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Realgar-20473.jpg/480px-Realgar-20473.jpg", wiki: "Realgar" },
+  { id: 17, week: 2, zh: "雌黃", en: "Orpiment", formula: "As2S3", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Orpiment-37599.jpg/480px-Orpiment-37599.jpg", wiki: "Orpiment" },
+  { id: 18, week: 2, zh: "輝銻礦", en: "Stibnite", formula: "Sb2S3", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Stibnite-118817.jpg/480px-Stibnite-118817.jpg", wiki: "Stibnite" },
+  { id: 19, week: 2, zh: "黃鐵礦", en: "Pyrite", formula: "FeS2", group: "簡易二元硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Pyrite-25110.jpg/480px-Pyrite-25110.jpg", wiki: "Pyrite" },
+  { id: 20, week: 2, zh: "鎳黃鐵礦", en: "Pentlandite", formula: "(Fe,Ni)9S8", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Pentlandite-232670.jpg/480px-Pentlandite-232670.jpg", wiki: "Pentlandite" },
+  { id: 21, week: 2, zh: "黃銅礦", en: "Chalcopyrite", formula: "CuFeS2", group: "銅鐵硫化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Chalcopyrite-Dolomite-21950.jpg/480px-Chalcopyrite-Dolomite-21950.jpg", wiki: "Chalcopyrite" },
+  { id: 22, week: 2, zh: "毒砂/砷黃鐵礦", en: "Arsenopyrite", formula: "FeAsS", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Arsenopyrite-117281.jpg/480px-Arsenopyrite-117281.jpg", wiki: "Arsenopyrite" },
+  { id: 23, week: 2, zh: "輝鉬礦", en: "Molybdenite", formula: "MoS2", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Molybdenite-21966.jpg/480px-Molybdenite-21966.jpg", wiki: "Molybdenite" },
+  { id: 24, week: 2, zh: "方砷鈷礦", en: "Skutterudite", formula: "CoAs3", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Skutterudite-118742.jpg/480px-Skutterudite-118742.jpg", wiki: "Skutterudite" },
+  { id: 25, week: 2, zh: "砷黝銅礦", en: "Tennantite", formula: "Cu12As4S13", group: "砷化物與磺鹽類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Tennantite-Dolomite-245781.jpg/480px-Tennantite-Dolomite-245781.jpg", wiki: "Tennantite" },
+  { id: 26, week: 2, zh: "赤銅礦", en: "Cuprite", formula: "Cu2O", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Cuprite-24151.jpg/480px-Cuprite-24151.jpg", wiki: "Cuprite" },
+  { id: 27, week: 2, zh: "紅鋅礦", en: "Zincite", formula: "ZnO", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Zincite-118944.jpg/480px-Zincite-118944.jpg", wiki: "Zincite" },
+  { id: 28, week: 2, zh: "赤鐵礦", en: "Hematite", formula: "Fe2O3", group: "剛玉與赤鐵礦族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Hematite-24254.jpg/480px-Hematite-24254.jpg", wiki: "Hematite" },
 
   // Week 3 (29-43)
-  { id: 29, week: 3, zh: "剛玉", en: "Corundum", formula: "Al2O3", group: "剛玉與赤鐵礦族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Corundum-189679.jpg/480px-Corundum-189679.jpg" },
-  { id: 30, week: 3, zh: "鈦鐵礦", en: "Ilmenite", formula: "FeTiO3", group: "剛玉與赤鐵礦族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Ilmenite-24258.jpg/480px-Ilmenite-24258.jpg" },
-  { id: 31, week: 3, zh: "金紅石", en: "Rutile", formula: "TiO2", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Rutile-119159.jpg/480px-Rutile-119159.jpg" },
-  { id: 32, week: 3, zh: "軟錳礦", en: "Pyrolusite", formula: "MnO2", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Pyrolusite-238475.jpg/480px-Pyrolusite-238475.jpg" },
-  { id: 33, week: 3, zh: "錫石", en: "Cassiterite", formula: "SnO2", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cassiterite-118837.jpg/480px-Cassiterite-118837.jpg" },
-  { id: 34, week: 3, zh: "鉻鐵礦", en: "Chromite", formula: "FeCr2O4", group: "尖晶石族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Chromite-182375.jpg/480px-Chromite-182375.jpg" },
-  { id: 35, week: 3, zh: "針鐵礦", en: "Goethite", formula: "FeO(OH)", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Goethite-118774.jpg/480px-Goethite-118774.jpg" },
-  { id: 36, week: 3, zh: "水鋁石", en: "Diaspore", formula: "AlO(OH)", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Diaspore-139367.jpg/480px-Diaspore-139367.jpg" },
-  { id: 37, week: 3, zh: "水錳礦", en: "Manganite", formula: "MnO(OH)", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Manganite-24316.jpg/480px-Manganite-24316.jpg" },
-  { id: 38, week: 3, zh: "水鎂石", en: "Brucite", formula: "Mg(OH)2", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Brucite-118836.jpg/480px-Brucite-118836.jpg" },
-  { id: 39, week: 3, zh: "三水鋁石", en: "Gibbsite", formula: "Al(OH)3", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Gibbsite-24432.jpg/480px-Gibbsite-24432.jpg" },
-  { id: 40, week: 3, zh: "尖晶石", en: "Spinel", formula: "MgAl2O4", group: "尖晶石族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Spinel-119176.jpg/480px-Spinel-119176.jpg" },
-  { id: 41, week: 3, zh: "磁鐵礦", en: "Magnetite", formula: "Fe3O4", group: "尖晶石族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Magnetite-118844.jpg/480px-Magnetite-118844.jpg" },
-  { id: 42, week: 3, zh: "鋇硬錳礦", en: "Romanechite", formula: "(Ba,H2O)2(Mn4+,Mn3+)5O16", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Romanechite-245842.jpg/480px-Romanechite-245842.jpg" },
-  { id: 43, week: 3, zh: "鋅鐵尖晶石", en: "Franklinite", formula: "ZnFe2O4", group: "尖晶石族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Franklinite-Zincite-Calcite-119024.jpg/480px-Franklinite-Zincite-Calcite-119024.jpg" },
+  { id: 29, week: 3, zh: "剛玉", en: "Corundum", formula: "Al2O3", group: "剛玉與赤鐵礦族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Corundum-189679.jpg/480px-Corundum-189679.jpg", wiki: "Corundum" },
+  { id: 30, week: 3, zh: "鈦鐵礦", en: "Ilmenite", formula: "FeTiO3", group: "剛玉與赤鐵礦族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Ilmenite-24258.jpg/480px-Ilmenite-24258.jpg", wiki: "Ilmenite" },
+  { id: 31, week: 3, zh: "金紅石", en: "Rutile", formula: "TiO2", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Rutile-119159.jpg/480px-Rutile-119159.jpg", wiki: "Rutile" },
+  { id: 32, week: 3, zh: "軟錳礦", en: "Pyrolusite", formula: "MnO2", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Pyrolusite-238475.jpg/480px-Pyrolusite-238475.jpg", wiki: "Pyrolusite" },
+  { id: 33, week: 3, zh: "錫石", en: "Cassiterite", formula: "SnO2", group: "簡易氧化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cassiterite-118837.jpg/480px-Cassiterite-118837.jpg", wiki: "Cassiterite" },
+  { id: 34, week: 3, zh: "鉻鐵礦", en: "Chromite", formula: "FeCr2O4", group: "尖晶石族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Chromite-182375.jpg/480px-Chromite-182375.jpg", wiki: "Chromite" },
+  { id: 35, week: 3, zh: "針鐵礦", en: "Goethite", formula: "FeO(OH)", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Goethite-118774.jpg/480px-Goethite-118774.jpg", wiki: "Goethite" },
+  { id: 36, week: 3, zh: "水鋁石", en: "Diaspore", formula: "AlO(OH)", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Diaspore-139367.jpg/480px-Diaspore-139367.jpg", wiki: "Diaspore" },
+  { id: 37, week: 3, zh: "水錳礦", en: "Manganite", formula: "MnO(OH)", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Manganite-24316.jpg/480px-Manganite-24316.jpg", wiki: "Manganite" },
+  { id: 38, week: 3, zh: "水鎂石", en: "Brucite", formula: "Mg(OH)2", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Brucite-118836.jpg/480px-Brucite-118836.jpg", wiki: "Brucite" },
+  { id: 39, week: 3, zh: "三水鋁石", en: "Gibbsite", formula: "Al(OH)3", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Gibbsite-24432.jpg/480px-Gibbsite-24432.jpg", wiki: "Gibbsite" },
+  { id: 40, week: 3, zh: "尖晶石", en: "Spinel", formula: "MgAl2O4", group: "尖晶石族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Spinel-119176.jpg/480px-Spinel-119176.jpg", wiki: "Spinel" },
+  { id: 41, week: 3, zh: "磁鐵礦", en: "Magnetite", formula: "Fe3O4", group: "尖晶石族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Magnetite-118844.jpg/480px-Magnetite-118844.jpg", wiki: "Magnetite" },
+  { id: 42, week: 3, zh: "鋇硬錳礦", en: "Romanechite", formula: "(Ba,H2O)2(Mn4+,Mn3+)5O16", group: "氫氧化物族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Romanechite-245842.jpg/480px-Romanechite-245842.jpg", wiki: "Romanechite" },
+  { id: 43, week: 3, zh: "鋅鐵尖晶石", en: "Franklinite", formula: "ZnFe2O4", group: "尖晶石族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Franklinite-Zincite-Calcite-119024.jpg/480px-Franklinite-Zincite-Calcite-119024.jpg", wiki: "Franklinite" },
 
   // Week 4 (44-56)
-  { id: 44, week: 4, zh: "岩鹽", en: "Halite", formula: "NaCl", group: "鹵化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Halite-24435.jpg/480px-Halite-24435.jpg" },
-  { id: 45, week: 4, zh: "螢石", en: "Fluorite", formula: "CaF2", group: "鹵化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fluorite-25118.jpg/480px-Fluorite-25118.jpg" },
-  { id: 46, week: 4, zh: "方解石", en: "Calcite", formula: "CaCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Calcite-24256.jpg/480px-Calcite-24256.jpg" },
-  { id: 47, week: 4, zh: "菱鎂礦", en: "Magnesite", formula: "MgCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Magnesite-24440.jpg/480px-Magnesite-24440.jpg" },
-  { id: 48, week: 4, zh: "菱鐵礦", en: "Siderite", formula: "FeCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Siderite-25117.jpg/480px-Siderite-25117.jpg" },
-  { id: 49, week: 4, zh: "菱鋅礦", en: "Smithsonite", formula: "ZnCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Smithsonite-21953.jpg/480px-Smithsonite-21953.jpg" },
-  { id: 50, week: 4, zh: "菱錳礦", en: "Rhodochrosite", formula: "MnCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Rhodochrosite-245794.jpg/480px-Rhodochrosite-245794.jpg" },
-  { id: 51, week: 4, zh: "霰石", en: "Aragonite", formula: "CaCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Aragonite-118835.jpg/480px-Aragonite-118835.jpg" },
-  { id: 52, week: 4, zh: "白鉛礦", en: "Cerussite", formula: "PbCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Cerussite-24434.jpg/480px-Cerussite-24434.jpg" },
-  { id: 53, week: 4, zh: "白雲石", en: "Dolomite", formula: "CaMg(CO3)2", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Dolomite-21951.jpg/480px-Dolomite-21951.jpg" },
-  { id: 54, week: 4, zh: "藍銅礦", en: "Azurite", formula: "Cu3(CO3)2(OH)2", group: "含水碳酸鹽與硼酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Azurite-24255.jpg/480px-Azurite-24255.jpg" },
-  { id: 55, week: 4, zh: "孔雀石", en: "Malachite", formula: "Cu2(CO3)(OH)2", group: "含水碳酸鹽與硼酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Malachite-24257.jpg/480px-Malachite-24257.jpg" },
-  { id: 56, week: 4, zh: "鈉硼解石", en: "Ulexite", formula: "NaCaB5O6(OH)6·5H2O", group: "含水碳酸鹽與硼酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Ulexite-238478.jpg/480px-Ulexite-238478.jpg" },
+  { id: 44, week: 4, zh: "岩鹽", en: "Halite", formula: "NaCl", group: "鹵化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Halite-24435.jpg/480px-Halite-24435.jpg", wiki: "Halite" },
+  { id: 45, week: 4, zh: "螢石", en: "Fluorite", formula: "CaF2", group: "鹵化物", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fluorite-25118.jpg/480px-Fluorite-25118.jpg", wiki: "Fluorite" },
+  { id: 46, week: 4, zh: "方解石", en: "Calcite", formula: "CaCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Calcite-24256.jpg/480px-Calcite-24256.jpg", wiki: "Calcite" },
+  { id: 47, week: 4, zh: "菱鎂礦", en: "Magnesite", formula: "MgCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Magnesite-24440.jpg/480px-Magnesite-24440.jpg", wiki: "Magnesite" },
+  { id: 48, week: 4, zh: "菱鐵礦", en: "Siderite", formula: "FeCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Siderite-25117.jpg/480px-Siderite-25117.jpg", wiki: "Siderite" },
+  { id: 49, week: 4, zh: "菱鋅礦", en: "Smithsonite", formula: "ZnCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Smithsonite-21953.jpg/480px-Smithsonite-21953.jpg", wiki: "Smithsonite" },
+  { id: 50, week: 4, zh: "菱錳礦", en: "Rhodochrosite", formula: "MnCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Rhodochrosite-245794.jpg/480px-Rhodochrosite-245794.jpg", wiki: "Rhodochrosite" },
+  { id: 51, week: 4, zh: "霰石", en: "Aragonite", formula: "CaCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Aragonite-118835.jpg/480px-Aragonite-118835.jpg", wiki: "Aragonite" },
+  { id: 52, week: 4, zh: "白鉛礦", en: "Cerussite", formula: "PbCO3", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Cerussite-24434.jpg/480px-Cerussite-24434.jpg", wiki: "Cerussite" },
+  { id: 53, week: 4, zh: "白雲石", en: "Dolomite", formula: "CaMg(CO3)2", group: "方解石族與碳酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Dolomite-21951.jpg/480px-Dolomite-21951.jpg", wiki: "Dolomite_(mineral)" },
+  { id: 54, week: 4, zh: "藍銅礦", en: "Azurite", formula: "Cu3(CO3)2(OH)2", group: "含水碳酸鹽與硼酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Azurite-24255.jpg/480px-Azurite-24255.jpg", wiki: "Azurite" },
+  { id: 55, week: 4, zh: "孔雀石", en: "Malachite", formula: "Cu2(CO3)(OH)2", group: "含水碳酸鹽與硼酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Malachite-24257.jpg/480px-Malachite-24257.jpg", wiki: "Malachite" },
+  { id: 56, week: 4, zh: "鈉硼解石", en: "Ulexite", formula: "NaCaB5O6(OH)6·5H2O", group: "含水碳酸鹽與硼酸鹽", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Ulexite-238478.jpg/480px-Ulexite-238478.jpg", wiki: "Ulexite" },
 
   // Week 5 (57-70)
-  { id: 57, week: 5, zh: "重晶石", en: "Barite", formula: "BaSO4", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Baryte-24259.jpg/480px-Baryte-24259.jpg" },
-  { id: 58, week: 5, zh: "天青石", en: "Celestite", formula: "SrSO4", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Celestine-24436.jpg/480px-Celestine-24436.jpg" },
-  { id: 59, week: 5, zh: "硬石膏", en: "Anhydrite", formula: "CaSO4", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Anhydrite-119158.jpg/480px-Anhydrite-119158.jpg" },
-  { id: 60, week: 5, zh: "石膏", en: "Gypsum", formula: "CaSO4·2H2O", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Gypsum-24252.jpg/480px-Gypsum-24252.jpg" },
-  { id: 61, week: 5, zh: "青鉛礦", en: "Linarite", formula: "PbCu(SO4)(OH)2", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Linarite-Caledonite-123471.jpg/480px-Linarite-Caledonite-123471.jpg" },
-  { id: 62, week: 5, zh: "明礬石", en: "Alunite", formula: "KAl3(SO4)2(OH)6", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Alunite-24317.jpg/480px-Alunite-24317.jpg" },
-  { id: 63, week: 5, zh: "黃鉀鐵礬", en: "Jarosite", formula: "KFe3(SO4)2(OH)6", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Jarosite-119177.jpg/480px-Jarosite-119177.jpg" },
-  { id: 64, week: 5, zh: "磷鐵鋰礦", en: "Triphylite", formula: "LiFePO4", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Triphylite-24437.jpg/480px-Triphylite-24437.jpg" },
-  { id: 65, week: 5, zh: "氟磷灰石", en: "Fluorapatite", formula: "Ca5(PO4)3F", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Fluorapatite-118843.jpg/480px-Fluorapatite-118843.jpg" },
-  { id: 66, week: 5, zh: "銀星石", en: "Wavellite", formula: "Al3(PO4)2(OH,F)3·5H2O", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Wavellite-119178.jpg/480px-Wavellite-119178.jpg" },
-  { id: 67, week: 5, zh: "磷鋰鋁石", en: "Amblygonite", formula: "(Li,Na)AlPO4(F,OH)", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Amblygonite-182379.jpg/480px-Amblygonite-182379.jpg" },
-  { id: 68, week: 5, zh: "釩鉛礦", en: "Vanadinite", formula: "Pb5(VO4)3Cl", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Vanadinite-24251.jpg/480px-Vanadinite-24251.jpg" },
-  { id: 69, week: 5, zh: "白鎢礦", en: "Scheelite", formula: "CaWO4", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Scheelite-118842.jpg/480px-Scheelite-118842.jpg" },
-  { id: 70, week: 5, zh: "鎢錳礦", en: "Huebnerite", formula: "MnWO4", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/H%C3%BCbnerite-Quartz-245785.jpg/480px-H%C3%BCbnerite-Quartz-245785.jpg" }
+  { id: 57, week: 5, zh: "重晶石", en: "Barite", formula: "BaSO4", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Baryte-24259.jpg/480px-Baryte-24259.jpg", wiki: "Baryte" },
+  { id: 58, week: 5, zh: "天青石", en: "Celestite", formula: "SrSO4", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Celestine-24436.jpg/480px-Celestine-24436.jpg", wiki: "Celestine_(mineral)" },
+  { id: 59, week: 5, zh: "硬石膏", en: "Anhydrite", formula: "CaSO4", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Anhydrite-119158.jpg/480px-Anhydrite-119158.jpg", wiki: "Anhydrite" },
+  { id: 60, week: 5, zh: "石膏", en: "Gypsum", formula: "CaSO4·2H2O", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Gypsum-24252.jpg/480px-Gypsum-24252.jpg", wiki: "Gypsum" },
+  { id: 61, week: 5, zh: "青鉛礦", en: "Linarite", formula: "PbCu(SO4)(OH)2", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Linarite-Caledonite-123471.jpg/480px-Linarite-Caledonite-123471.jpg", wiki: "Linarite" },
+  { id: 62, week: 5, zh: "明礬石", en: "Alunite", formula: "KAl3(SO4)2(OH)6", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Alunite-24317.jpg/480px-Alunite-24317.jpg", wiki: "Alunite" },
+  { id: 63, week: 5, zh: "黃鉀鐵礬", en: "Jarosite", formula: "KFe3(SO4)2(OH)6", group: "硫酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Jarosite-119177.jpg/480px-Jarosite-119177.jpg", wiki: "Jarosite" },
+  { id: 64, week: 5, zh: "磷鐵鋰礦", en: "Triphylite", formula: "LiFePO4", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Triphylite-24437.jpg/480px-Triphylite-24437.jpg", wiki: "Triphylite" },
+  { id: 65, week: 5, zh: "氟磷灰石", en: "Fluorapatite", formula: "Ca5(PO4)3F", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Fluorapatite-118843.jpg/480px-Fluorapatite-118843.jpg", wiki: "Fluorapatite" },
+  { id: 66, week: 5, zh: "銀星石", en: "Wavellite", formula: "Al3(PO4)2(OH,F)3·5H2O", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Wavellite-119178.jpg/480px-Wavellite-119178.jpg", wiki: "Wavellite" },
+  { id: 67, week: 5, zh: "磷鋰鋁石", en: "Amblygonite", formula: "(Li,Na)AlPO4(F,OH)", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Amblygonite-182379.jpg/480px-Amblygonite-182379.jpg", wiki: "Amblygonite" },
+  { id: 68, week: 5, zh: "釩鉛礦", en: "Vanadinite", formula: "Pb5(VO4)3Cl", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Vanadinite-24251.jpg/480px-Vanadinite-24251.jpg", wiki: "Vanadinite" },
+  { id: 69, week: 5, zh: "白鎢礦", en: "Scheelite", formula: "CaWO4", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Scheelite-118842.jpg/480px-Scheelite-118842.jpg", wiki: "Scheelite" },
+  { id: 70, week: 5, zh: "鎢錳礦", en: "Huebnerite", formula: "MnWO4", group: "磷酸鹽與鎢酸鹽族", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/H%C3%BCbnerite-Quartz-245785.jpg/480px-H%C3%BCbnerite-Quartz-245785.jpg", wiki: "Hübnerite" }
 ];
 
 let currentMode = 1;
@@ -212,13 +212,15 @@ function speak(text) {
   window.speechSynthesis.speak(utterance);
 }
 
-// 圖片彈窗
+// 圖片彈窗 (改為 Wikipedia 條目與相片)
 function showImage(id) {
   const m = minerals.find(item => item.id === id);
   if (!m) return;
   document.getElementById('modalMineralName').innerText = `${m.zh} (${m.en})`;
   document.getElementById('modalImg').src = m.img;
-  document.getElementById('modalExternalLink').href = `https://www.mindat.org/min-${encodeURIComponent(m.en)}.html`;
+  
+  const wikiTarget = m.wiki || m.en;
+  document.getElementById('modalExternalLink').href = `https://en.wikipedia.org/wiki/${encodeURIComponent(wikiTarget)}`;
   document.getElementById('imgModal').style.display = 'flex';
 }
 
@@ -308,14 +310,13 @@ function renderQuiz(title) {
   activeQuestions.forEach((m, idx) => {
     html += `
       <div class="quiz-item" data-id="${m.id}" id="item-${m.id}">
-        <!-- 左側：中文前 2 個按鈕 (圖片 + 語音) + 中文名稱 -->
+        <!-- 左側：僅保留圖片查看按鈕 + 中文名稱 -->
         <div class="left-title-box">
           <button class="btn-icon" title="查看標本照片" onclick="showImage(${m.id})">🖼️</button>
-          <button class="btn-icon" title="播放英文讀音" onclick="speak('${m.en.replace(/'/g, "\\'")}')">🔊</button>
           <span class="mineral-name">${idx + 1}. ${m.zh}</span>
         </div>
         
-        <!-- 英文挖空 (挖空前亦有喇叭圖示) -->
+        <!-- 英文挖空 (挖空前保留喇叭發音圖示) -->
         <div class="input-wrap">
           <div class="input-inner">
             <button class="btn-icon" title="播放該空格英文答案" onclick="speak('${m.en.replace(/'/g, "\\'")}')">🔊</button>
