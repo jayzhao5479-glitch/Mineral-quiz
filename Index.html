@@ -14,11 +14,11 @@
       --border: #e2e8f0;
       --success: #16a34a;
       --error: #dc2626;
-      --hint: #d97706;
+      --accent: #f59e0b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 16px; line-height: 1.5; }
-    .container { max-width: 980px; margin: 0 auto; }
+    .container { max-width: 1040px; margin: 0 auto; }
     header { text-align: center; margin-bottom: 20px; }
     header h1 { font-size: 1.7rem; color: #0f172a; margin-bottom: 6px; }
     header p { color: #64748b; font-size: 0.9rem; }
@@ -36,21 +36,24 @@
     .card-title { font-size: 1.1rem; font-weight: 600; color: #0f172a; }
     .badge { font-size: 0.75rem; background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 9999px; }
 
-    /* 題目列樣式 */
-    .quiz-item { display: grid; grid-template-columns: 240px 1fr 1fr 65px; gap: 10px; align-items: center; margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; background: #f8fafc; border: 1px solid transparent; }
-    @media (max-width: 820px) {
+    /* 題目列排版 */
+    .quiz-item { display: grid; grid-template-columns: 260px 1.1fr 1fr 65px; gap: 10px; align-items: center; margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: #f8fafc; border: 1px solid transparent; }
+    @media (max-width: 860px) {
       .quiz-item { grid-template-columns: 1fr; gap: 8px; }
     }
+    
     .left-title-box { display: flex; align-items: center; gap: 6px; }
     .btn-icon { background: #ffffff; border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; transition: background 0.15s; }
     .btn-icon:hover { background: #e2e8f0; }
-    .mineral-name { font-weight: 600; font-size: 0.95rem; color: #1e293b; margin-left: 4px; }
+    .mineral-name { font-weight: 600; font-size: 0.95rem; color: #1e293b; margin-left: 2px; }
     
-    .input-wrap { display: flex; flex-direction: column; width: 100%; }
-    .input-wrap input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.88rem; background: #ffffff; }
-    .input-wrap input.correct { border-color: var(--success); background-color: #f0fdf4; color: var(--success); font-weight: 600; }
-    .input-wrap input.wrong { border-color: var(--error); background-color: #fef2f2; color: var(--error); }
-    .ans-hint { font-size: 0.8rem; font-weight: 600; margin-top: 3px; display: none; }
+    .input-wrap { display: flex; flex-direction: column; width: 100%; position: relative; }
+    .input-inner { display: flex; align-items: center; gap: 6px; }
+    .input-inner input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.88rem; background: #ffffff; }
+    .input-inner input.correct { border-color: var(--success); background-color: #f0fdf4; color: var(--success); font-weight: 600; }
+    .input-inner input.wrong { border-color: var(--error); background-color: #fef2f2; color: var(--error); }
+    
+    .ans-hint { font-size: 0.8rem; font-weight: 600; margin-top: 3px; display: none; padding-left: 2px; }
     .hint-en { color: #0284c7; }
     .hint-formula { color: #059669; }
 
@@ -59,7 +62,7 @@
 
     .footer-actions { text-align: center; margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
-    /* 圖片彈窗 Modal */
+    /* Modal 圖片彈窗 */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
     .modal-content { background: #ffffff; border-radius: 12px; max-width: 500px; width: 100%; padding: 20px; text-align: center; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .modal-close { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b; }
@@ -77,7 +80,7 @@
     <p>範圍：第 1～5 次小考（No. 1～70）</p>
   </header>
 
-  <!-- 模式切換 -->
+  <!-- 3 種模式切換 -->
   <div class="mode-nav">
     <button class="btn active" onclick="switchMode(1)">1. 相似礦物群組測驗</button>
     <button class="btn" onclick="switchMode(2)">2. 指定週次進度 (Week 1-5)</button>
@@ -87,10 +90,10 @@
   <!-- 次級控制台 -->
   <div class="control-panel" id="sub-panel"></div>
 
-  <!-- 測驗區域 -->
+  <!-- 題目區塊 -->
   <div id="quiz-area"></div>
 
-  <!-- 底部整體功能按鈕 -->
+  <!-- 底部整體控制 -->
   <div class="footer-actions">
     <button class="btn btn-action" onclick="checkAnswers()">送出批改</button>
     <button class="btn" onclick="toggleAllAnswers()">👁️ 一鍵解答全頁</button>
@@ -105,12 +108,12 @@
     <div class="modal-title" id="modalMineralName"></div>
     <img src="" alt="礦物照片" class="modal-img" id="modalImg">
     <div style="font-size: 0.85rem; color:#64748b;">標本參考照片</div>
-    <a href="" target="_blank" class="modal-link" id="modalExternalLink">在 Mindat.org 查看更多晶體照 ↗</a>
+    <a href="" target="_blank" class="modal-link" id="modalExternalLink">在 Mindat.org 查看完整晶體資料 ↗</a>
   </div>
 </div>
 
 <script>
-// 1-5 頁礦物資料庫（含維基百科高品質標本圖片來源）
+// 1~5 頁礦物資料庫（共 70 題）
 const minerals = [
   // Week 1 (1-14)
   { id: 1, week: 1, zh: "自然金", en: "Gold", formula: "Au", group: "自然元素金屬類", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Gold-24430.jpg/480px-Gold-24430.jpg" },
@@ -196,10 +199,10 @@ const minerals = [
 let currentMode = 1;
 let activeQuestions = [];
 
-// 語音播放功能
+// 英文發音功能
 function speak(text) {
   if (!('speechSynthesis' in window)) {
-    alert("您的瀏覽器不支援語音播放");
+    alert("您的瀏覽器不支援語音合成播放");
     return;
   }
   window.speechSynthesis.cancel();
@@ -209,7 +212,7 @@ function speak(text) {
   window.speechSynthesis.speak(utterance);
 }
 
-// 圖片彈窗控制
+// 圖片彈窗
 function showImage(id) {
   const m = minerals.find(item => item.id === id);
   if (!m) return;
@@ -223,7 +226,7 @@ function closeModal(event) {
   document.getElementById('imgModal').style.display = 'none';
 }
 
-// 模式切換
+// 切換模式
 function switchMode(mode) {
   currentMode = mode;
   document.querySelectorAll('.mode-nav .btn').forEach((b, i) => {
@@ -233,6 +236,7 @@ function switchMode(mode) {
   loadQuestions();
 }
 
+// 次級控制列
 function renderSubPanel() {
   const panel = document.getElementById('sub-panel');
   if (currentMode === 1) {
@@ -262,12 +266,13 @@ function renderSubPanel() {
     `;
   } else {
     panel.innerHTML = `
-      <div><strong>全範圍 1~70 隨機測驗</strong>（共 20 題）</div>
+      <div><strong>全範圍 1~70 隨機測驗</strong>（每次隨機抽 20 題）</div>
       <button class="btn" onclick="loadQuestions()">重新抽 20 題</button>
     `;
   }
 }
 
+// 抽取並載入題目
 function loadQuestions() {
   if (currentMode === 1) {
     const sel = document.getElementById('group-select').value;
@@ -289,36 +294,42 @@ function loadQuestions() {
   }
 }
 
-// 渲染題目 HTML
+// 渲染題目列表
 function renderQuiz(title) {
   const container = document.getElementById('quiz-area');
   let html = `
     <div class="quiz-card">
       <div class="card-header">
         <span class="card-title">${title}</span>
-        <span class="badge">英文與化學式挖空</span>
+        <span class="badge">挖空與聽力測驗</span>
       </div>
   `;
 
   activeQuestions.forEach((m, idx) => {
     html += `
       <div class="quiz-item" data-id="${m.id}" id="item-${m.id}">
-        <!-- 左側：圖片按鈕 + 語音按鈕 + 中文名 -->
+        <!-- 左側：中文前 2 個按鈕 (圖片 + 語音) + 中文名稱 -->
         <div class="left-title-box">
           <button class="btn-icon" title="查看標本照片" onclick="showImage(${m.id})">🖼️</button>
           <button class="btn-icon" title="播放英文讀音" onclick="speak('${m.en.replace(/'/g, "\\'")}')">🔊</button>
           <span class="mineral-name">${idx + 1}. ${m.zh}</span>
         </div>
         
-        <!-- 英文挖空 -->
+        <!-- 英文挖空 (挖空前亦有喇叭圖示) -->
         <div class="input-wrap">
-          <input type="text" class="ans-en" placeholder="輸入英文名稱..." autocomplete="off">
+          <div class="input-inner">
+            <button class="btn-icon" title="播放該空格英文答案" onclick="speak('${m.en.replace(/'/g, "\\'")}')">🔊</button>
+            <input type="text" class="ans-en" placeholder="輸入英文名稱..." autocomplete="off">
+          </div>
           <div class="ans-hint hint-en">正解: ${m.en}</div>
         </div>
 
         <!-- 化學式挖空 -->
         <div class="input-wrap">
-          <input type="text" class="ans-formula" placeholder="輸入化學式..." autocomplete="off">
+          <div class="input-inner">
+            <span style="font-size:1.05rem; opacity:0.6; padding:0 2px;">🧪</span>
+            <input type="text" class="ans-formula" placeholder="輸入化學式..." autocomplete="off">
+          </div>
           <div class="ans-hint hint-formula">正解: ${m.formula}</div>
         </div>
 
@@ -334,7 +345,7 @@ function renderQuiz(title) {
   container.innerHTML = html;
 }
 
-// 個別題目解答切換
+// 個別單題解答切換
 function toggleSingleAnswer(id) {
   const item = document.getElementById(`item-${id}`);
   if (!item) return;
@@ -368,7 +379,7 @@ function checkFormulaMatch(userInput, target) {
   return false;
 }
 
-// 送出批改
+// 答案批改
 function checkAnswers() {
   const items = document.querySelectorAll('.quiz-item');
   let score = 0;
@@ -381,7 +392,7 @@ function checkAnswers() {
     const inputEn = item.querySelector('.ans-en');
     const inputF = item.querySelector('.ans-formula');
 
-    // 驗證英文
+    // 英文批改 (忽略大小寫與空格)
     if (inputEn.value.trim().toLowerCase() === m.en.trim().toLowerCase()) {
       inputEn.className = 'ans-en correct';
       score++;
@@ -389,7 +400,7 @@ function checkAnswers() {
       inputEn.className = 'ans-en wrong';
     }
 
-    // 驗證化學式
+    // 化學式批改
     if (checkFormulaMatch(inputF.value, m.formula)) {
       inputF.className = 'ans-formula correct';
       score++;
@@ -401,7 +412,7 @@ function checkAnswers() {
   alert(`批改完成！得分: ${score} / ${total}`);
 }
 
-// 重新作答
+// 重設答題狀態
 function resetCurrentQuiz() {
   document.querySelectorAll('.ans-en, .ans-formula').forEach(input => {
     input.value = '';
